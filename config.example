@@ -1,0 +1,24 @@
+# Security Hardening Tool - Config
+# Copy file ini ke ~/.security-hardening.conf dan isi nilai yang sesuai
+# cp config.example ~/.security-hardening.conf
+
+# ---- Telegram Bot ----
+# Dapatkan dari @BotFather di Telegram
+TG_BOT_TOKEN=""
+# Dapatkan dari pesan ke bot (gunakan auto-detect di menu atau install.sh)
+TG_CHAT_ID=""
+
+# ---- Alert Settings ----
+# on/off untuk tiap tipe alert
+ALERT_SSH="on"
+ALERT_DOCKER="on"
+ALERT_UFW="on"
+ALERT_DISK="on"
+
+# ---- Alert Database & Log Paths ----
+ALERT_DB_DIR="/var/log/telegram-alerts"
+ALERT_DB_FILE="/var/log/telegram-alerts/alerts.db"
+POLLING_LOG="/var/log/telegram-polling.log"
+ACTIONS_LOG="/var/log/telegram-actions.log"
+LOGIN_ALERT_LOG="/var/log/login-alerts.log"
+BANNED_IPS_FILE="/etc/banned_ips.txt"

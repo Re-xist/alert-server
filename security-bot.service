@@ -1,0 +1,17 @@
+[Unit]
+Description=Security Bot - Telegram Monitoring & Alert
+After=network.target
+
+[Service]
+Type=simple
+User=root
+# Ganti /path/to/security-scripts dengan path instalasi Anda
+WorkingDirectory=/path/to/security-scripts
+ExecStart=/path/to/security-scripts/bot-daemon.sh
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
