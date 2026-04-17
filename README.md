@@ -1,34 +1,34 @@
 # Alert Server
 
-Server security monitoring & alert system berbasis Telegram Bot. Monitoring real-time, remote command, SSH login alert, dan hardening otomatis untuk server Linux.
+Telegram Bot-based server security monitoring & alert system. Real-time monitoring, remote commands, SSH login alerts, and automatic hardening for Linux servers.
 
-**Developer:** [Martin (Re-xist)](https://github.com/Re-xist)
-
----
-
-## Fitur
-
-- **SSH Login Alert** - Notifikasi Telegram instan saat ada login SSH
-- **Remote Command via Telegram** - Kontrol server dari Telegram (`/status`, `/ban`, `/unban`, dll)
-- **UFW Firewall Management** - Kelola firewall langsung dari Telegram
-- **Docker Monitoring** - Monitoring container Docker
-- **Disk Usage Alert** - Peringatan otomatis jika disk hampir penuh
-- **IP Banning** - Ban/unban IP dengan satu pesan
-- **Auto Hardening** - Script hardening server (SSH, kernel, network, filesystem)
-- **Systemd Service** - Berjalan sebagai service dengan auto-restart
+**Developer:** [Re-xist](https://github.com/Re-xist)
 
 ---
 
-## Persyaratan
+## Features
+
+- **SSH Login Alert** - Instant Telegram notification on SSH login
+- **Remote Command via Telegram** - Control server from Telegram (`/status`, `/ban`, `/unban`, etc.)
+- **UFW Firewall Management** - Manage firewall directly from Telegram
+- **Docker Monitoring** - Monitor Docker containers
+- **Disk Usage Alert** - Automatic warning when disk is almost full
+- **IP Banning** - Ban/unban IP with a single message
+- **Auto Hardening** - Server hardening script (SSH, kernel, network, filesystem)
+- **Systemd Service** - Runs as a service with auto-restart
+
+---
+
+## Requirements
 
 - OS: Ubuntu / Debian-based Linux
-- Akses root (`sudo`)
-- Dependencies: `curl`, `jq` (otomatis diinstall oleh installer)
-- Akun Telegram
+- Root access (`sudo`)
+- Dependencies: `curl`, `jq` (auto-installed by installer)
+- Telegram account
 
 ---
 
-## Instalasi
+## Installation
 
 ### 1. Clone Repository
 
@@ -37,78 +37,78 @@ git clone https://github.com/Re-xist/alert-server.git
 cd alert-server
 ```
 
-### 2. Siapkan Telegram Bot
+### 2. Setup Telegram Bot
 
-1. Buka Telegram, cari **@BotFather**
-2. Kirim `/newbot`
-3. Ikuti instruksi - beri nama dan username untuk bot
-4. Salin **Bot Token** yang diberikan (format: `123456789:ABCdefGHIjklMNOpqrsTUVwxyz`)
-5. Kirim pesan apa saja ke bot baru Anda (untuk keperluan auto-detect Chat ID)
+1. Open Telegram, search for **@BotFather**
+2. Send `/newbot`
+3. Follow the instructions - provide a name and username for the bot
+4. Copy the **Bot Token** provided (format: `123456789:ABCdefGHIjklMNOpqrsTUVwxyz`)
+5. Send any message to your new bot (required for auto-detect Chat ID)
 
-### 3. Jalankan Installer
+### 3. Run Installer
 
 ```bash
 sudo bash install.sh
 ```
 
-Installer akan memandu Anda melalui:
+The installer will guide you through:
 
-| Step | Deskripsi |
-|------|-----------|
-| 1 | Validasi Bot Token (otomatis cek ke API Telegram) |
-| 2 | Pilih Chat ID - auto-detect atau input manual |
-| 3 | Tes koneksi - kirim pesan tes ke Telegram |
+| Step | Description |
+|------|-------------|
+| 1 | Validate Bot Token (automatic check via Telegram API) |
+| 2 | Select Chat ID - auto-detect or manual input |
+| 3 | Test connection - send test message to Telegram |
 
-Installer secara otomatis akan:
+The installer will automatically:
 - Install dependencies (`curl`, `jq`)
-- Simpan konfigurasi ke `~/.security-hardening.conf`
+- Save configuration to `~/.security-hardening.conf`
 - Setup SSH login alert hook
-- Install dan start systemd service `security-bot`
-- Kirim pesan tes ke Telegram
+- Install and start systemd service `security-bot`
+- Send a test message to Telegram
 
-### 4. Verifikasi
+### 4. Verify
 
 ```bash
-# Cek status service
+# Check service status
 systemctl status security-bot
 
-# Lihat log real-time
+# View real-time logs
 journalctl -u security-bot -f
 ```
 
-Jika berhasil, Anda akan menerima pesan di Telegram: **"Security Bot berhasil diinstall!"**
+If successful, you will receive a message on Telegram: **"Security Bot berhasil diinstall!"**
 
 ---
 
-## Konfigurasi Manual
+## Manual Configuration
 
-Jika ingin setup tanpa installer interaktif:
+If you prefer to setup without the interactive installer:
 
 ```bash
-# Copy template config
+# Copy config template
 cp config.example ~/.security-hardening.conf
 
 # Edit config
 nano ~/.security-hardening.conf
 ```
 
-Isi nilai yang diperlukan:
+Fill in the required values:
 
 ```bash
 TG_BOT_TOKEN="123456789:ABCdefGHIjklMNOpqrsTUVwxyz"
 TG_CHAT_ID="123456789"
 
-# Toggle alert on/off
+# Toggle alerts on/off
 ALERT_SSH="on"
 ALERT_DOCKER="on"
 ALERT_UFW="on"
 ALERT_DISK="on"
 ```
 
-Lalu install service manual:
+Then install the service manually:
 
 ```bash
-# Copy service file (edit path dulu)
+# Copy service file (edit path first)
 sudo cp security-bot.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable security-bot
@@ -117,63 +117,63 @@ sudo systemctl start security-bot
 
 ---
 
-## Penggunaan
+## Usage
 
-### Perintah Telegram
+### Telegram Commands
 
-Kirim perintah ini ke bot Anda di Telegram:
+Send these commands to your bot on Telegram:
 
-| Command | Fungsi |
-|---------|--------|
-| `/start` | Mulai bot / tampilkan info |
-| `/help` | Daftar semua perintah |
-| `/status` | Cek status server (CPU, RAM, Disk, Uptime) |
-| `/ban <ip>` | Blokir IP address |
-| `/unban <ip>` | Lepas blokir IP address |
-| `/banned` | Lihat daftar IP yang diblokir |
-| `/ufw status` | Status firewall UFW |
-| `/ufw allow <port>` | Buka port di firewall |
-| `/ufw deny <port>` | Tutup port di firewall |
-| `/docker` | Status container Docker |
+| Command | Description |
+|---------|-------------|
+| `/start` | Start bot / show info |
+| `/help` | List all commands |
+| `/status` | Check server status (CPU, RAM, Disk, Uptime) |
+| `/ban <ip>` | Block an IP address |
+| `/unban <ip>` | Unblock an IP address |
+| `/banned` | View list of blocked IPs |
+| `/ufw status` | Show UFW firewall status |
+| `/ufw allow <port>` | Open port in firewall |
+| `/ufw deny <port>` | Close port in firewall |
+| `/docker` | Show Docker container status |
 | `/restart docker` | Restart Docker service |
-| `/reboot` | Reboot server (dengan konfirmasi) |
-| `/logs <n>` | Tampilkan n log terakhir |
+| `/reboot` | Reboot server (with confirmation) |
+| `/logs <n>` | Show last n log entries |
 
-### Menu Interaktif
+### Interactive Menu
 
-Jalankan script utama untuk menu hardening interaktif:
+Run the main script for the interactive hardening menu:
 
 ```bash
 sudo bash security-hardening.sh
 ```
 
-Menu yang tersedia:
+Available options:
 1. SSH Hardening
 2. Firewall Setup
 3. System Update
 4. Docker Monitoring
 5. Disk Usage Check
 6. Network Monitoring
-7. dll.
+7. And more...
 
 ---
 
-## Struktur File
+## File Structure
 
 ```
 alert-server/
-├── install.sh              # Setup wizard interaktif
-├── security-hardening.sh   # Menu hardening utama
+├── install.sh              # Interactive setup wizard
+├── security-hardening.sh   # Main hardening menu
 ├── bot-daemon.sh           # Telegram polling daemon
 ├── login-alert.sh          # SSH login notifier
 ├── security-bot.service    # Systemd unit file
-├── config.example          # Template konfigurasi
-└── README.md               # Dokumentasi (file ini)
+├── config.example          # Configuration template
+└── README.md               # Documentation (this file)
 ```
 
 ---
 
-## Management Service
+## Service Management
 
 ```bash
 # Start service
@@ -185,10 +185,10 @@ sudo systemctl stop security-bot
 # Restart service
 sudo systemctl restart security-bot
 
-# Cek status
+# Check status
 sudo systemctl status security-bot
 
-# Lihat log
+# View logs
 sudo journalctl -u security-bot -f
 
 # Disable auto-start
@@ -197,22 +197,22 @@ sudo systemctl disable security-bot
 
 ---
 
-## File Log
+## Log Files
 
-| File | Isi |
-|------|-----|
-| `/var/log/telegram-alerts/alerts.db` | Database alert |
-| `/var/log/telegram-polling.log` | Log polling daemon |
-| `/var/log/telegram-actions.log` | Log aksi (ban, UFW, dll) |
-| `/var/log/login-alerts.log` | Log SSH login alert |
-| `/etc/banned_ips.txt` | Daftar IP yang dibanned |
+| File | Content |
+|------|---------|
+| `/var/log/telegram-alerts/alerts.db` | Alert database |
+| `/var/log/telegram-polling.log` | Polling daemon log |
+| `/var/log/telegram-actions.log` | Action log (ban, UFW, etc.) |
+| `/var/log/login-alerts.log` | SSH login alert log |
+| `/etc/banned_ips.txt` | Banned IP list |
 
 ---
 
 ## Uninstall
 
 ```bash
-# Stop dan remove service
+# Stop and remove service
 sudo systemctl stop security-bot
 sudo systemctl disable security-bot
 sudo rm /etc/systemd/system/security-bot.service
@@ -221,7 +221,7 @@ sudo systemctl daemon-reload
 # Remove SSH alert hook
 sudo rm /etc/profile.d/security-alert-ssh.sh
 
-# Remove config dan log
+# Remove config and logs
 rm ~/.security-hardening.conf
 sudo rm -rf /var/log/telegram-alerts
 sudo rm /var/log/telegram-polling.log
@@ -231,31 +231,31 @@ sudo rm /var/log/login-alerts.log
 
 ---
 
-## Keamanan
+## Security
 
-- Config file disimpan dengan permission `600` (hanya root bisa baca)
-- Token Telegram **tidak** disimpan di dalam script, hanya di config file
-- Service berjalan sebagai root untuk akses penuh ke system tools
-- Remote reboot membutuhkan konfirmasi
+- Config file is saved with `600` permission (root only)
+- Telegram token is **not** stored inside scripts, only in config file
+- Service runs as root for full access to system tools
+- Remote reboot requires confirmation
 
-**Tips keamanan tambahan:**
-- Jangan share Bot Token atau Chat ID
-- Gunakan private repository jika fork project ini
-- Aktifkan 2FA di akun GitHub dan server
-- Review log secara berkala
-
----
-
-## Kontribusi
-
-Pull request dan issue welcome di [https://github.com/Re-xist/alert-server](https://github.com/Re-xist/alert-server)
+**Additional security tips:**
+- Never share your Bot Token or Chat ID
+- Use a private repository if you fork this project
+- Enable 2FA on your GitHub account and server
+- Review logs periodically
 
 ---
 
-## Lisensi
+## Contributing
 
-MIT License - Bebas digunakan dan dimodifikasi.
+Pull requests and issues are welcome at [https://github.com/Re-xist/alert-server](https://github.com/Re-xist/alert-server)
 
 ---
 
-**Made by [Martin](https://github.com/Re-xist) from Jakarta, Indonesia**
+## License
+
+MIT License - Free to use and modify.
+
+---
+
+**Made by [Re-xist](https://github.com/Re-xist)**
